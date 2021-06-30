@@ -2,7 +2,8 @@
 # Derived from quickstart.py
 
 from __future__ import print_function
-import datetime
+from datetime import time,datetime, timedelta
+import pytz
 import os.path
 import requests
 from googleapiclient.discovery import build
@@ -17,9 +18,6 @@ SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
 
 
 def main():
-    """Shows basic usage of the Google Calendar API.
-    Prints the start and name of the next 10 events on the user's calendar.
-    """
     creds = None
     # The file token.json stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
@@ -40,14 +38,29 @@ def main():
 
     service = build('calendar', 'v3', credentials=creds)
 
-    # Call the Calendar API
-    now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
+    # Get the time at the start and end of the day
+    today = datetime.utcnow().date()+timedelta(days=0)
+    startOfDay = datetime.combine(today, time()).isoformat() + 'Z'
+    endOfDay = datetime.combine(today, time(23, 59, 59, 999999)).isoformat() + 'Z'
 
+    print(startOfDay)
+    print(endOfDay)
+
+    # Gets the calendars from the user's account
     calList = service.calendarList().list(minAccessRole='writer').execute()
+    # Create a list to save all the calendar IDs to
     ids = list()
+    # iterate through the list of calendars and get each ID, append to the list
     for item in calList["items"]:
         ids.append(item["id"])
-    print(ids)
+    #print(ids)
+
+    calEvents = service.events().list(calendarId=ids[0],singleEvents=True,timeMin=startOfDay,timeMax=endOfDay).execute()
+    events = list()
+    for item in calEvents["items"]:
+        events.append(item["summary"])
+    pprint(calEvents["summary"])
+    pprint(events)
 
 if __name__ == '__main__':
     main()
