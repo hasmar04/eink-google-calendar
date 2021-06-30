@@ -38,13 +38,16 @@ def main():
 
     service = build('calendar', 'v3', credentials=creds)
 
-    # Get the time at the start and end of the day
-    today = datetime.utcnow().date()+timedelta(days=0)
-    startOfDay = datetime.combine(today, time()).isoformat() + 'Z'
-    endOfDay = datetime.combine(today, time(23, 59, 59, 999999)).isoformat() + 'Z'
+    dayOffset = 0
+    
+    def getTime():
+        # Get the time at the start and end of the day
+        today = datetime.utcnow().date()+timedelta(days=dayOffset)
+        startOfDay = datetime.combine(today, time()).isoformat() + 'Z'
+        endOfDay = datetime.combine(today, time(23, 59, 59, 999999)).isoformat() + 'Z'
+        return startOfDay, endOfDay
 
-    print(startOfDay)
-    print(endOfDay)
+    startOfDay, endOfDay = getTime()
 
     # Gets the calendars from the user's account
     calList = service.calendarList().list(minAccessRole='writer').execute()
