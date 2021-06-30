@@ -127,3 +127,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Calendar API Auth Files
+credentials.json
+token.json
