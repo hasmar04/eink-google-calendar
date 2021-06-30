@@ -55,7 +55,11 @@ def main():
     #    print(start, event['summary'])
 
     calList = service.calendarList().list(minAccessRole='writer').execute()
-    pprint(calList["items"])
+    ids = list()
+    for item in calList["items"]:
+        ids.append(item["id"])
+    print(ids)
+    #pprint(calList["items"][0]["id"])
     #print()
     #pprint(service.calendarList().get(calList))
     
