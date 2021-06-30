@@ -38,7 +38,8 @@ def main():
 
     service = build('calendar', 'v3', credentials=creds)
 
-    dayOffset = 0
+    dayOffset = -1
+    calSelect = 5
     
     def getTime():
         # Get the time at the start and end of the day
@@ -58,7 +59,7 @@ def main():
         ids.append(item["id"])
     #print(ids)
 
-    calEvents = service.events().list(calendarId=ids[0],singleEvents=True,timeMin=startOfDay,timeMax=endOfDay).execute()
+    calEvents = service.events().list(calendarId=ids[calSelect],singleEvents=True,timeMin=startOfDay,timeMax=endOfDay).execute()
     events = list()
     for item in calEvents["items"]:
         events.append(item["summary"])
