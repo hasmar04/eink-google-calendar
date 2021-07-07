@@ -131,3 +131,6 @@ dmypy.json
 # Calendar API Auth Files
 credentials.json
 token.json
+
+# Coderunner files
+tempCodeRunnerFile.py
