@@ -1,6 +1,10 @@
-# Minimum required code to work with the Google Calendar API
-# Derived from quickstart.py
+'''
+    eInk Google Calendar
+    A beautiful calendar that shows your events from Google Calendar on an eInk display
+    By Harrison Asmar
+'''
 
+#Dependencies
 from __future__ import print_function
 from datetime import time,datetime, timedelta
 import pytz
@@ -9,12 +13,16 @@ from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
-
 from pprint import pprint
+
+#Default day and Calendar (testing only)
+dayOffset = 0
+calSelect = 5
+#Timezone configuration. Use timezones from docs/timezones.txt
+timezone = pytz.timezone("Australia/Brisbane")
 
 # If modifying these scopes, delete the file token.json.
 SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
-
 
 def main():
     creds = None
@@ -36,15 +44,15 @@ def main():
             token.write(creds.to_json())
 
     gcal = build('calendar', 'v3', credentials=creds)
-
-    #User configuration
-    dayOffset = 0
-    calSelect = 5
-    #Timezone configuration. Use timezones from docs/timezones.txt
-    timezone = pytz.timezone("Australia/Brisbane")
     
     def getTime():
-        # Get the time at the start and end of the day
+        """
+        Get the time at the start and end of the day
+        
+        Returns: 
+        str:startOfDay
+        str:endOfDay
+        """
         day = datetime.utcnow().date()+timedelta(days=dayOffset)
         startOfDay = datetime.combine(day, time(second=0), tzinfo=timezone).isoformat()
         endOfDay = datetime.combine(day, time(23, 59, 59), tzinfo=timezone).isoformat()
