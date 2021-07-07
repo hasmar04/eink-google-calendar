@@ -5,7 +5,6 @@ from __future__ import print_function
 from datetime import time,datetime, timedelta
 import pytz
 import os.path
-import requests
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
@@ -31,15 +30,17 @@ def main():
         else:
             flow = InstalledAppFlow.from_client_secrets_file(
                 'credentials.json', SCOPES)
-            creds = flow.run_local_server(port=0)
+            creds = flow.run_console(port=0)
         # Save the credentials for the next run
         with open('token.json', 'w') as token:
             token.write(creds.to_json())
 
     gcal = build('calendar', 'v3', credentials=creds)
 
+    #User configuration
     dayOffset = 0
     calSelect = 5
+    #Timezone configuration. Use timezones from docs/timezones.txt
     timezone = pytz.timezone("Australia/Brisbane")
     
     def getTime():
