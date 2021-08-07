@@ -8,6 +8,7 @@
 from __future__ import print_function
 from datetime import time,datetime, timedelta
 import pytz
+import string
 import os.path
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -74,15 +75,13 @@ def main():
     calEvents = gcal.events().list(calendarId=ids[calSelect],singleEvents=True,timeMin=startOfDay,timeMax=endOfDay).execute()
     events = list()
     for item in calEvents["items"]:
-        events.append(item["start"])
-        #if item["start"] == "*date': *":
-            #print('true')
+        if str(item["start"])[0:7] == "{'date'":
+            events.append((str(item["start"])[10:20]))
+        else:
+            events.append((str(item["start"])[14:39]))
         print(str(item["summary"])+', '+str(item["start"])+', '+str(item["end"]))
-    #pprint(calEvents["summary"])
-    #pprint(events)
-
-    #for item in events:
-        #pprint(gcal.events().get(calendarId=ids[calSelect],eventId=item).execute()["summary"])
+    print(events)
+    print(len(events[1]))
 
 if __name__ == '__main__':
     main()
